@@ -25,34 +25,10 @@ impl Debug for State {
     }
 }
 
-// pub struct AppBuilder {
-//     name: String,
-//     event_loop: Option<EventLoopProxy<Graphics>>,
-// }
-
 pub struct App {
     name: String,
     state: State,
 }
-
-// impl AppBuilder {
-//     pub fn name(mut self, name: String) -> Self {
-//         self.name = name;
-//         self
-//     }
-
-//     pub fn with_event_loop(mut self, event_loop: &EventLoop<Graphics>) -> Self {
-//         self.event_loop = Some(event_loop.create_proxy());
-//         self
-//     }
-
-//     pub fn build(self) -> App {
-//         App {
-//             name: self.name,
-//             state: State::Init(self.event_loop),
-//         }
-//     }
-// }
 
 impl App {
     pub fn new() -> Self {
@@ -109,7 +85,7 @@ impl ApplicationHandler<Graphics> for App {
 
                 #[cfg(not(target_arch = "wasm32"))]
                 {
-                    win_attr = win_attr.with_title("WebGPU example");
+                    win_attr = win_attr.with_title(self.name.as_str());
                 }
 
                 #[cfg(target_arch = "wasm32")]
