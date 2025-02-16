@@ -1,3 +1,7 @@
+#![allow(dead_code)]
+
+use std::fmt::Debug;
+
 use crate::graphics::{create_graphics, Graphics, Rc};
 use winit::{
     application::ApplicationHandler,
@@ -12,20 +16,67 @@ enum State {
     Init(Option<EventLoopProxy<Graphics>>),
 }
 
+impl Debug for State {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            State::Ready(_) => write!(f, "Ready"),
+            State::Init(_) => write!(f, "Init"),
+        }
+    }
+}
+
+// pub struct AppBuilder {
+//     name: String,
+//     event_loop: Option<EventLoopProxy<Graphics>>,
+// }
+
 pub struct App {
+    name: String,
     state: State,
 }
 
+// impl AppBuilder {
+//     pub fn name(mut self, name: String) -> Self {
+//         self.name = name;
+//         self
+//     }
+
+//     pub fn with_event_loop(mut self, event_loop: &EventLoop<Graphics>) -> Self {
+//         self.event_loop = Some(event_loop.create_proxy());
+//         self
+//     }
+
+//     pub fn build(self) -> App {
+//         App {
+//             name: self.name,
+//             state: State::Init(self.event_loop),
+//         }
+//     }
+// }
+
 impl App {
-    pub fn new(event_loop: &EventLoop<Graphics>) -> Self {
+    pub fn new() -> Self {
         Self {
-            state: State::Init(Some(event_loop.create_proxy())),
+            name: std::env!("CARGO_PKG_NAME").to_string(),
+            state: State::Init(None),
         }
+    }
+
+    pub fn configure(mut self, name: String) -> Self {
+        self.name = name;
+        self
+    }
+
+    pub fn with_event_loop(mut self, event_loop: &EventLoop<Graphics>) -> Self {
+        self.state = State::Init(Some(event_loop.create_proxy()));
+        self
     }
 
     fn draw(&mut self) {
         if let State::Ready(gfx) = &mut self.state {
             gfx.draw();
+        } else {
+            log::warn!("Attempted to draw before graphics were ready.");
         }
     }
 
@@ -82,7 +133,9 @@ impl ApplicationHandler<Graphics> for App {
         }
     }
 
-    fn user_event(&mut self, _event_loop: &ActiveEventLoop, graphics: Graphics) {
+    fn user_event(&mut self, _event_loop: &ActiveEventLoop, mut graphics: Graphics) {
+        graphics.draw();
+        log::info!("User event received.");
         self.state = State::Ready(graphics);
     }
 }

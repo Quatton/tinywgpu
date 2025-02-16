@@ -1626,6 +1626,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "tinywgpu"
+version = "0.1.0"
+dependencies = [
+ "console_error_panic_hook",
+ "console_log",
+ "env_logger",
+ "log",
+ "pollster",
+ "wasm-bindgen-futures",
+ "wgpu",
+ "winit",
+]
+
+[[package]]
 name = "toml_datetime"
 version = "0.6.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2011,20 +2025,6 @@ dependencies = [
  "wgpu-types",
  "windows",
  "windows-core",
-]
-
-[[package]]
-name = "wgpu-template"
-version = "0.1.0"
-dependencies = [
- "console_error_panic_hook",
- "console_log",
- "env_logger",
- "log",
- "pollster",
- "wasm-bindgen-futures",
- "wgpu",
- "winit",
 ]
 
 [[package]]

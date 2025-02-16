@@ -21,7 +21,8 @@ fn run_app(event_loop: EventLoop<Graphics>, app: App) {
 fn run_app(event_loop: EventLoop<Graphics>, mut app: App) {
     // Allows the setting of the log level through RUST_LOG env var.
     // It also allows wgpu logs to be seen.
-    env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("error")).init();
+    env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("tinywgpu=warn"))
+        .init();
 
     // Runs the app on the current thread.
     let _ = event_loop.run_app(&mut app);
@@ -42,6 +43,6 @@ fn main() {
     // input, and uses significantly less power/CPU time than ControlFlow::Poll.
     //event_loop.set_control_flow(ControlFlow::Wait);
 
-    let app = App::new(&event_loop);
+    let app = App::new().with_event_loop(&event_loop);
     run_app(event_loop, app);
 }

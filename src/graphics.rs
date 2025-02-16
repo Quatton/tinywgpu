@@ -1,5 +1,8 @@
+#![allow(dead_code)]
+
 use std::borrow::Cow;
 
+use log::error;
 use wgpu::{
     Adapter, Color, CommandEncoderDescriptor, Device, DeviceDescriptor, Features, FragmentState,
     Instance, Limits, LoadOp, MemoryHints, Operations, PowerPreference, Queue,
@@ -64,7 +67,9 @@ pub async fn create_graphics(window: Rc<Window>, proxy: EventLoopProxy<Graphics>
         render_pipeline,
     };
 
-    let _ = proxy.send_event(gfx);
+    let _ = proxy.send_event(gfx).inspect_err(|e| {
+        error!("Failed to send event to event loop: {:?}", e);
+    });
 }
 
 fn create_pipeline(device: &Device, swap_chain_format: TextureFormat) -> RenderPipeline {
