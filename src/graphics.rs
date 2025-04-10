@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::borrow::Cow;
 
 use log::error;
@@ -102,6 +100,7 @@ fn create_pipeline(device: &Device, swap_chain_format: TextureFormat) -> RenderP
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 pub struct Graphics {
     window: Rc<Window>,
     instance: Instance,
